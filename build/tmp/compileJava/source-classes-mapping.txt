@@ -1,0 +1,12 @@
+edu/au/cc/gallery/tools/UserAdmin/MainMenu.java
+ edu.au.cc.gallery.tools.UserAdmin.MainMenu
+edu/au/cc/gallery/tools/UserAdmin/User.java
+ edu.au.cc.gallery.tools.UserAdmin.User
+edu/au/cc/gallery/tools/UserAdmin/Secrets.java
+ edu.au.cc.gallery.tools.UserAdmin.Secrets
+edu/au/cc/gallery/tools/UserAdmin/DB.java
+ edu.au.cc.gallery.tools.UserAdmin.DB
+edu/au/cc/gallery/tools/UserAdmin/S3.java
+ edu.au.cc.gallery.tools.UserAdmin.S3
+edu/au/cc/gallery/tools/UserAdmin/App.java
+ edu.au.cc.gallery.tools.UserAdmin.App

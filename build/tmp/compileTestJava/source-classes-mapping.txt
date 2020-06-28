@@ -1,0 +1,2 @@
+edu/au/cc/gallery/tools/UserAdmin/AppTest.java
+ edu.au.cc.gallery.tools.UserAdmin.AppTest
