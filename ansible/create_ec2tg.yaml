@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  module_defaults:
+    group/aws:
+      region: us-east-2
+
+  tasks:
+    - elb_target_group:
+        name: "ig-target-group-mod5"
+        protocol: http
+        port: 80
+        vpc_id: "{{ vpc.vpc.id }}"
+        state: present
+      register: target_group
+
+# ---
+# - hosts: localhost
+#   gather_facts: no
+
+#   # create global modifiers
+#   module_defaults:
+#     group/aws:
+#       region: "us-east-2"
+#   tasks:
+#     - elb_target_group:
+#         name: "ig-target-group-mod5"
+#         protocol: http
+#         port: 80
+#         vpc_id: "{{ vpc.vpc.id }}"
+#         health_check_path: /
+#         stickines_type: source_ip
+#         stickiness_enabled: no
+#         state: present
+#       register: ig_target_group

@@ -1,0 +1,57 @@
+---
+- hosts: localhost
+  gather_facts: no
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    # create public subnet acl rules
+    - name: create public acl
+      ec2_vpc_nacl:
+        name: ig-public-acl-mod5
+        tags:
+          Name: ig_public_acl
+        vpc_id: "{{ vpc.vpc.id }}"
+        subnets: "{{ ig_ps_1.subnet.id }}"
+        ingress:
+        # rule no, protocol, allow/deny, cidr, icmp_type, icmp_code,
+        #                                             port from, port to
+            - [100, 'tcp', 'allow', '0.0.0.0/0', null, null, 22, 22]
+            - [200, 'tcp', 'allow', '0.0.0.0/0', null, null, 80, 80]
+            - [300, 'tcp', 'allow', '0.0.0.0/0', null, null, 443, 443]
+            - [400, 'tcp', 'allow', '0.0.0.0/0', null, null, 1024, 65535]
+            - [500, 'tcp', 'allow', '173.21.91.30/32', null, null, 22, 22]
+            - [600, 'tcp', 'allow', '173.21.91.30/32', null, null, 80, 80]
+            - [700, 'tcp', 'allow', '173.21.91.30/32', null, null, 443, 443]
+            - [800, 'tcp', 'allow', '173.21.91.30/32', null, null, 5000, 5000]
+        egress:
+            - [100, 'tcp', 'allow', '0.0.0.0/0', null, null, 22, 22]
+            - [200, 'tcp', 'allow', '0.0.0.0/0', null, null, 80, 80]
+            - [300, 'tcp', 'allow', '0.0.0.0/0', null, null, 443, 443]
+            - [400, 'tcp', 'allow', '0.0.0.0/0', null, null, 1024, 65535]
+            - [500, 'tcp', 'allow', '10.10.0.0/16', null, null, 5432, 5432]
+        state: 'present'
+
+    - name: create private acl
+      ec2_vpc_nacl:
+        name: ig-private-acl-mod5
+        tags:
+          Name: ig_public_acl
+        vpc_id: "{{ vpc.vpc.id }}"
+        subnets:
+          - "{{ ig_pvs_1.subnet.id }}"
+          - "{{ ig_pvs_2.subnet.id }}"
+        ingress:
+        # rule no, protocol, allow/deny, cidr, icmp_type, icmp_code,
+        #                                             port from, port to
+            - [100, 'tcp', 'allow', '10.0.0.0/16', null, null, 22, 22]
+            - [200, 'tcp', 'allow', '10.0.0.0/16', null, null, 443, 443]
+            - [300, 'tcp', 'allow', '0.0.0.0/0', null, null, 1024, 65535]
+            - [400, 'tcp', 'allow', '10.0.0.0/16', null, null, 5432, 5432]
+
+        egress:
+            - [100, 'tcp', 'allow', '0.0.0.0/0', null, null, 80, 80]
+            - [200, 'tcp', 'allow', '0.0.0.0/0', null, null, 443, 443]
+            - [300, 'tcp', 'allow', '10.0.0.0/16', null, null, 1024, 65535]
+        state: 'present'

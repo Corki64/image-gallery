@@ -1,0 +1,32 @@
+---
+- hosts: tag_Module_server
+  user: ec2-user
+  become: true
+  vars:
+    index_file: developer/var/www/html/index.html
+    apache_user: apache
+    apache_group: apache
+    ansible_python_interpreter: /usr/bin/python
+
+  tasks:
+    - name:
+      package:
+        name: emacs-nox
+        state: present
+    # - name: install apache
+    #   when:
+    #     - ansible_facts['distribution'] == 'Amazon'
+    #   package:
+    #       name: httpd 
+    #       state: present
+    # - name: copy index.html
+    #   copy:
+    #     src: "{{ index_file }}"
+    #     dest: /var/www/html/index.html
+    #     owner: apache
+    #     group: apache
+    # - name: start apache
+    #   service:
+    #       name: httpd
+    #       state: started
+    #       enabled: true

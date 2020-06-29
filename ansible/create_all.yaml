@@ -1,0 +1,24 @@
+---
+  # create vpc - subnets { 1 public -=0> igw : 2 private -=0> nat } 
+  # create igw { in public subnet } - nat { in public subnet }
+  # create rds
+- import_playbook: create_vpc.yaml
+
+  # create security groups and acls along with rules
+- import_playbook: create_sgs.yaml
+- import_playbook: create_acls.yaml
+- import_playbook: create_rds.yaml
+
+
+- import_playbook: create_ec2lt.yaml
+- import_playbook: create_ec2tg.yaml
+
+
+
+- import_playbook: create_ec2lb_asg.yaml
+
+
+
+
+- import_playbook: create_ec2.yaml
+- import_playbook: configure_ec2.yaml

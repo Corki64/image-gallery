@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: create ec2 launch template
+      ec2_launch_template:
+        name: "default-server-template-mod5"
+        image_id: "ami-026dea5602e368e96"
+        instance_type: t3.small
+        iam_instance_profile: ig-server-role
+        tags:
+          Name: default-server-mod5
+        key_name: kubuntuCorkSec
+        network_interfaces:
+           - device_index: 0
+             associate_public_ip_address: yes
+             groups:
+             - "{{ ig_server_sg.group_id }}"
+             - "{{ ig_developer_sg.group_id }}"
+             - "{{ ig_postgres_tag_sg.group_id }}"
+        user_data: "{{ lookup('file', './ec2-scripts/ec2-prod-bootstrap.sh') | b64encode }}"
+
+
+
+
+
+# ---
+# - hosts: localhost
+#   gather_facts: no
+
+#   # create global modifiers
+#   module_defaults:
+#     group/aws:
+#       region: "us-east-2"
+#   tasks:
+#     - name: create ec2 launch template
+#       ec2_launch_template:
+#         name: "server-template"
+#         image_id: "ami-026dea5602e368e96"
+#         tags:
+#           Name: default-server
+#         key_name: kubuntuCorkSec
+#         instance_type: t3.small
+#         iam_instance_profile: ig-server-role
+#         network_interfaces:
+#           - device_index: 0
+#             associate_public_ip_address: yes
+#             groups:
+#               - "{{ ig_server_sg.group.id }}"
+#               - "{{ ig_developer_sg.group.id }}"
+#               - "{{ ig_postgres_tag_sg.group.id }}"
+#       user_data: "{{ lookup('file', './ec2-prod-bootstrap.sh') | b64encode }}"

@@ -1,0 +1,117 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+
+    # server security group
+    - name: create server security group
+      ec2_group:
+        name: ig-public-server-sg-mod5
+        tags:
+          Name: ig-public-server-sg-mod5
+        description: public server sg for apache
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+            - 22
+            - 80
+            - 443
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allows all traffice ssh - http - https
+        state: present
+      register: ig_server_sg
+
+    # developer security group
+    - name: create developement security group
+      ec2_group:
+        name: ig-developement-sg-mod5
+        tags:
+          Name: ig-developement-sg-mod5
+        description: developement sg for mod5
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+            - 22
+            - 80
+            - 443
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allows all traffice ssh - http - https
+          - proto: tcp
+            ports:
+            - 5000
+            cidr_ip: 173.21.91.30/32
+            rule_desc: allows port 5000 access by developer home ip
+        state: present
+      register: ig_developer_sg
+
+    # postgres security group
+    - name: create postgres security group
+      ec2_group:
+        name: ig-postgres-sg-mod5
+        tags:
+          Name: ig-postgres-sg-mod5
+        description: postgres-rds-sg
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+            - 5432
+            rule_desc: allows traffic from anyone in postgres-tag group to access postgres rds port
+          - proto: tcp
+            ports:
+            - 5000
+            cidr_ip: 173.21.91.30/32
+            rule_desc: allows port 5000 access by developer home ip
+        state: present
+      register: ig_postgres_sg
+
+    # postgres-tag security group
+    - name: create postgres-tag security group
+      ec2_group:
+        name: ig-postgres-tag-sg-mod5
+        tags:
+          Name: ig-postgres-tag-sg-mod5
+        description: postgres-tag-group
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+            - 1024-65535
+            group_name: ig-postgres-sg-mod5
+            rule_desc: allows traffic from any port in rds sg to access postgres-tag sg
+          - proto: tcp
+            ports:
+            - 5000
+            cidr_ip: 173.21.91.30/32
+            rule_desc: allows port 5000 access by developer home ip
+        state: present
+      register: ig_postgres_tag_sg
+
+    # postgres security group - rerun
+    - name: create postgres security group re-run to edit group permissions
+      ec2_group:
+        name: ig-postgres-sg-mod5
+        tags:
+          Name: ig-postgres-sg-mod5
+        description: postgres-rds-sg
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            ports:
+            - 5432
+            group_name: ig-postgres-tag-sg-mod5
+            rule_desc: allows traffic from anyone in postgres-tag group to access postgres rds port
+          - proto: tcp
+            ports:
+            - 5000
+            cidr_ip: 173.21.91.30/32
+            rule_desc: allows port 5000 access by developer home ip
+        state: present
+      register: ig_postgres_sg

@@ -1,0 +1,30 @@
+---
+- hosts: al2
+  become: yes
+
+  # introduction to variables // they can be placed in a
+  # seperate file
+  vars:
+    index_file: developer/var/www/html/index.html
+    apache_user: apache
+    apache_group: apache
+  tasks:
+    - name: install emacs-nox
+      package: name=emacs-nox state=present
+    - name: install apache
+      when:
+        - ansible_facts['distribution'] == 'Amazon'
+      package:
+          name: httpd 
+          state: present
+    - name: copy index.html
+      copy:
+        src: "{{ index_file }}"
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+    - name: start apache
+      service:
+          name: httpd
+          state: started
+          enabled: true

@@ -1,0 +1,55 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    - name: elastic eip
+      ec2_eip:
+        filters:
+          tag:
+            - Name: ig-eip
+      register: ig_eip_mod5
+    
+    - name: create nlb
+      elb_network_lb:
+        name: ig-lb-mod5
+        subnet_mappings:
+          - SubnetId: "{{ ig_ps_1 }}"
+      listeners:
+        - protocol: http # options are http, https, ssl, tcp
+          load_balancer_port: 80
+          instance_port: 80
+          proxy_protocol: True
+        - protocol: https
+          load_balancer_port: 443
+          instance_protocol: http # optional, defaults to value of protocol setting
+          instance_port: 80
+          # ssl certificate required for https or ssl
+          ssl_certificate_id: "	arn:aws:acm:us-east-2:239082226473:certificate/db691f8d-1196-4796-ae21-2c15b142022c"
+        # listeners:
+        #   - Protocol: TCP
+        #     Port: 80
+        # DefaultActions:
+        #   - Type: forward
+        #     TargetGroupName: ig-target-group-mod5
+      state: present
+
+    - name: create asg
+      ec2_asg:
+        name: ig-asg-mod5
+        availability_zones: [ 'us-east-2a' ]
+        launch_template:
+          launch_template_name: "server-template"
+        min_size: 2
+        max_size: 4
+        desired_capacity: 2
+        vpc_zone_identifier: "{{ ig_ps_1.subnet.id }}"
+        health_check_type: ELB
+        target_group_arns: "{{ ig_target_group.target_group_arn }}"
+        wait_for_instances: no
+        replace_all_instances: yes
+        state: present

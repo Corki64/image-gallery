@@ -1,0 +1,43 @@
+---
+- hosts: localhost
+  gather_facts: no
+  vars:
+    ami_id: "ami-026dea5602e368e96"
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    - name: create default ec2 server
+      ec2:
+        key_name: kubuntuCorkSec
+        group: ig-public-mod5-sg
+        instance_type: t3.small
+        image: "{{ ami_id }}"
+        instance_tags:
+          Name: default server
+          Module: server
+        wait: yes
+        vpc_subnet_id: "{{ ig_ps_1.subnet.id }}"
+        assign_public_ip: yes
+        exact_count: 2
+        count_tag:
+          Name: default server
+
+  # tasks: 
+  #   - name: create default ec2 server
+  #     ec2: 
+  #       key_name: kubuntuCorkSec
+  #       group: ig-public-mod5-sg
+  #       instance_type: t3.nano
+  #       image: "{{ ami_id  }}"
+  #       instance_tags: 
+  #         Name: default server
+  #         Module: 5
+  #       wait: yes
+  #       vpc_subnet_id: "{{ ig_ps_1.subnet.id }}"
+  #       assign_public_ip: yes
+  #       exact_count: 1
+  #       count_tag: 
+  #         Name: default server

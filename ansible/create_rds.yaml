@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  # create global modifiers
+  module_defaults:
+    group/aws:
+      region: "us-east-2"
+  tasks:
+    # create rds subnet to link vpc subnets
+    - rds_subnet_group:
+        name: ig-rds-subnet-mod5
+        description: subnet for rds instance
+        subnets:
+          - "{{ ig_pvs_1.subnet.id }}"
+          - "{{ ig_pvs_2.subnet.id }}"
+        state: present
+
+    # restore valid snapshot
+    - local_action:
+        module: rds
+        command: restore
+        snapshot: image-gallery-final-snapshot
+        instance_name: image-gallery
+        region: us-east-2
+        zone: us-east-2a
+        subnet: ig-rds-subnet-mod5
+        publicly_accessible: no
+        wait: no
+        wait_timeout: 600
+        tags:
+            Name: ig-image-gallery-db
+      register: rds
+
+    - debug:
+        msg: "The new db endpoint is {{ rds.instance.endpoint }}"
+
+    # initialize secret endpoint
+    - name: secrets
+      aws_secret:
+        name: 'admins'
+        secret_type: 'string'
+        secret: "{{ rds.instance.endpoint }}"
+        state: present
