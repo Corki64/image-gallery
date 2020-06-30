@@ -1,4 +1,0 @@
----
-- import_playbook: create_vpc.yaml
-- import_playbook: create_ec2.yaml
-- import_playbook: configure_ec2.yaml

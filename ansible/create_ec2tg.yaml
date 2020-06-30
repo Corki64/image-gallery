@@ -9,11 +9,11 @@
   tasks:
     - elb_target_group:
         name: "ig-target-group-mod5"
-        protocol: http
+        protocol: tcp
         port: 80
         vpc_id: "{{ vpc.vpc.id }}"
         stickiness_enabled: no
         stickiness_type: source_ip
         health_check_path: /
         state: present
-      register: target_group
+      register: target_group_mod5

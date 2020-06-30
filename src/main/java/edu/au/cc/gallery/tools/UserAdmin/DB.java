@@ -14,7 +14,7 @@ public class DB {
 	private static final String dbURL = "jdbc:postgresql://image-gallery.cqxj5v5xjbzr.us-east-2.rds.amazonaws.com/image_gallery";
 	public static Connection connection;
 
-	String secretID = "admins";
+	String secretID = "admins-star";
 
 	private JSONObject getSecret() {
 		Secrets obj = new Secrets();

@@ -18,9 +18,12 @@
              - "{{ ig_server_sg.group_id }}"
              - "{{ ig_developer_sg.group_id }}"
              - "{{ ig_postgres_tag_sg.group_id }}"
-        user_data: "{{ lookup('file', './ec2-scripts/ec2-prod-bootstrap.sh') | b64encode }}"
+        user_data: "{{ lookup('file', './ec2-scripts/ec2-prod-1.0.sh') | b64encode }}"
+        state: present
+      register: ig_lt_mod5
 
-
+    # - name: debug
+    #   debug: var=ig_lt_mod5
 
 
 

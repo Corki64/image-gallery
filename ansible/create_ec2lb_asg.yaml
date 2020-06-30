@@ -7,38 +7,61 @@
     group/aws:
       region: "us-east-2"
   tasks:
-    - name: elastic eip
-      ec2_eip:
+    - name: elastic eip one
+      ec2_eip_info:
         filters:
-          tag: 
-            - Name: "ig-eip"
-      register: ig_eip_mod5
+          tag:Name: ig-eip-one
+      register: ig_eip_one
+    # - name: elastic eip two
+    #   ec2_eip_info:
+    #     filters:
+    #       tag:Name: ig-eip-two
+    #   register: ig_eip_two
+
+
+    # - name: obtain all information for a single ACM certificate
+    #   aws_acm_info:
+    #   register: luis_cortez
+
     - name: create nlb
       elb_network_lb:
         name: ig-lb-mod5
         subnet_mappings:
-          - SubnetId: "{{ ig_ps_1 }}"
-            AllocationId: "{{ eip.addresses[0].allocation_id }}"
+          - SubnetId: "{{ ig_ps_1.subnet.id }}"
+            AllocationId: "{{ ig_eip_one.addresses[0].allocation_id }}"
+          # - SubnetId: "{{ ig_ps_2.subnet.id }}"
+          #   AllocationId: "{{ ig_eip_two.addresses[0].allocation_id }}"
+        purge_listeners: yes 
         listeners:
           - Protocol: TCP
             Port: 80
             DefaultActions:
               - Type: forward
                 TargetGroupName: ig-target-group-mod5
+          # - Protocol: TLS
+          #   Port: 443
+          #   Certificates:
+          #     - certificateArn: "{{ luis_cortez.certificate_arn }}"
+          #   DefaultActions:
+          #     - Type: forward
+          #       TargetGroupName: ig-target-group-mod5
         state: present
+      register: ig_nlb_mod5
+
+
 
     - name: create asg
       ec2_asg:
         name: ig-asg-mod5
         availability_zones: ["us-east-2a"]
         launch_template:
-          launch_template_name: "server-template"
+          launch_template_id: "{{ ig_lt_mod5.latest_template.launch_template_id }}"
         min_size: 2
         max_size: 4
         desired_capacity: 2
         vpc_zone_identifier: "{{ ig_ps_1.subnet.id }}"
         health_check_type: ELB
-        target_group_arns: "{{ ig_target_group.target_group_arn }}"
+        target_group_arns: "{{ target_group_mod5.target_group_arn }}"
         wait_for_instances: no
         replace_all_instances: yes
         state: present
