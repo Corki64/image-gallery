@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Class-Path: s3-2.13.20.jar secretsmanager-2.13.20.jar spark-template-han
+ dlebars-2.7.1.jar spark-core-2.8.0.jar postgresql-42.2.12.jar json-2020
+ 0518.jar slf4j-simple-1.7.21.jar aws-xml-protocol-2.13.20.jar aws-json-
+ protocol-2.13.20.jar aws-query-protocol-2.13.20.jar protocol-core-2.13.
+ 20.jar arns-2.13.20.jar aws-core-2.13.20.jar auth-2.13.20.jar regions-2
+ .13.20.jar sdk-core-2.13.20.jar profiles-2.13.20.jar http-client-spi-2.
+ 13.20.jar utils-2.13.20.jar annotations-2.13.20.jar handlebars-guava-ca
+ che-4.0.6.jar handlebars-4.0.6.jar slf4j-api-1.7.28.jar jetty-webapp-9.
+ 4.12.v20180830.jar websocket-server-9.4.12.v20180830.jar jetty-servlet-
+ 9.4.12.v20180830.jar jetty-security-9.4.12.v20180830.jar jetty-server-9
+ .4.12.v20180830.jar websocket-servlet-9.4.12.v20180830.jar javax.servle
+ t-api-3.1.0.jar websocket-client-9.4.12.v20180830.jar jetty-client-9.4.
+ 12.v20180830.jar jetty-http-9.4.12.v20180830.jar websocket-common-9.4.1
+ 2.v20180830.jar jetty-io-9.4.12.v20180830.jar jetty-xml-9.4.12.v2018083
+ 0.jar websocket-api-9.4.12.v20180830.jar commons-lang3-3.1.jar antlr4-r
+ untime-4.5.1-1.jar rhino-1.7R4.jar guava-14.0.1.jar jackson-databind-2.
+ 10.4.jar jackson-core-2.10.4.jar reactive-streams-1.0.2.jar eventstream
+ -1.0.1.jar jackson-annotations-2.10.4.jar jetty-util-9.4.12.v20180830.j
+ ar
+Main-Class: edu.au.cc.gallery.tools.UserAdmin.App
+
