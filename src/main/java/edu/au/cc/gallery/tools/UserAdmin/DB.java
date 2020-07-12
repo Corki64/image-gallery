@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 
 public class DB {
-	private static final String dbURL = "jdbc:postgresql://172.17.0.2:5432/image_gallery";
+	private static final String dbURL = "jdbc:postgresql://localhost:5432/image_gallery";
 	public static Connection connection;
 
 	String secretID = "admins-star";
@@ -30,7 +30,7 @@ public class DB {
 		try {
 			Class.forName("org.postgresql.Driver");
 			JSONObject secret = getSecret();
-			connection = DriverManager.getConnection(dbURL, "admin", "1nsecure");
+			connection = DriverManager.getConnection(dbURL, "admin", "");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			System.exit(1);
