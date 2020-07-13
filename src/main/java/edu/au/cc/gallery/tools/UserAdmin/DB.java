@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 
 public class DB {
-	private static final String dbURL = "jdbc:postgresql://localhost:5432/image_gallery";
+	private static final String dbURL = "jdbc:postgresql://db:5432/image_gallery";
 	public static Connection connection;
 
 	String secretID = "admins-star";
