@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.ArrayList;
 
-import org.json.JSONObject;
+// import org.json.JSONObject;
 
 import java.sql.SQLException;
 
@@ -14,22 +14,22 @@ public class DB {
 	private static final String dbURL = "jdbc:postgresql://db:5432/image_gallery";
 	public static Connection connection;
 
-	String secretID = "admins-star";
+	// String secretID = "admins-star";
 
-	private JSONObject getSecret() {
-		Secrets obj = new Secrets();
-		String s = obj.getSecretString(secretID);
-		return new JSONObject(s);
-	}
+	// private JSONObject getSecret() {
+	// 	Secrets obj = new Secrets();
+	// 	String s = obj.getSecretString(secretID);
+	// 	return new JSONObject(s);
+	// }
 
-	private String getPassword(JSONObject secret) {
-		return secret.getString("password");
-	}
-
+	// private String getPassword(JSONObject secret) {
+	// 	return secret.getString("password");
+	// }
+	String userString = System.getenv("DB_USER");
 	public void connect() throws SQLException {
 		try {
 			Class.forName("org.postgresql.Driver");
-			JSONObject secret = getSecret();
+			// JSONObject secret = getSecret();
 			connection = DriverManager.getConnection(dbURL, "admin", "");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
